@@ -15,15 +15,16 @@ public class MathBlock : MonoBehaviour
     void Start()
     {
         UpdateTextDisplay();
+        GridManager.gridManager.SnapToGrid(gameObject);
     }
 
-    private void OnCollisionEnter(Collision other)
+    private bool HandleCollisionWithBlock(GameObject other)
     {
-        if (other.gameObject.CompareTag("MathBlock"))
+        if (other.CompareTag("MathBlock"))
         {
-            MathBlock otherMathBlock = other.gameObject.GetComponent<MathBlock>();
+            MathBlock otherMathBlock = other.GetComponent<MathBlock>();
             if ((otherMathBlock.operation == Operation.None && this.operation == Operation.None) ||
-                (otherMathBlock.operation != Operation.None && this.operation != Operation.None)) return;
+                (otherMathBlock.operation != Operation.None && this.operation != Operation.None)) return false;
 
             if (operation == Operation.None)
             {
@@ -56,6 +57,7 @@ public class MathBlock : MonoBehaviour
             }
  
         }
+        return true;
     }
 
 
@@ -88,9 +90,22 @@ public class MathBlock : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool Push(Vector3 direction)
     {
+        Vector3 desiredMove = transform.position + direction * GridManager.gridSize;
+        if(GridManager.gridManager.GetNode(desiredMove) == null)
+            return false;
+        if (GridManager.gridManager.GetNode(desiredMove).gameObj)
+        {
+            if (HandleCollisionWithBlock(GridManager.gridManager.GetNode(desiredMove).gameObj) == false)
+            {
+                if(GridManager.gridManager.GetNode(desiredMove).gameObj.GetComponent<MathBlock>().Push(direction) == false)
+                    return false;
+            }
+        }
+        transform.position = desiredMove;
         
+        GridManager.gridManager.SnapToGrid(gameObject);
+        return true;
     }
 }
