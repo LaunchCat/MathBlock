@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float targetScore = 2;
     [SerializeField] private List<MathBlock> mathBlocks;
-    
-    
+    [SerializeField] private Level level;
+    [SerializeField] private MathBlock mathBlockPrefab;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,7 +18,22 @@ public class GameManager : MonoBehaviour
             Destroy(gameManager);
         }
         gameManager = this;
-        mathBlocks.AddRange(FindObjectsByType<MathBlock>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
+        
+
+        targetScore = level.levelTarget;
+        
+        Vector3 StartPosition = Vector3.zero;
+        StartPosition.y = 10;
+
+        for (int i = 0; i < level.levelData.Count; i++)
+        {
+            MathBlock instance = Instantiate(mathBlockPrefab, StartPosition, Quaternion.identity);
+            instance.operation = level.levelData[i].operation;
+            instance.value = level.levelData[i].value;
+            mathBlocks.Add(instance);
+            StartPosition.z += 2;
+
+        }
 
     }
     
