@@ -4,7 +4,7 @@ using TMPro;
 
 public class MathBlock : MonoBehaviour
 {
-    public enum Operation { Add, Sub, Multiply, Divide };
+    public enum Operation { Add, Subtract, Multiply, Divide };
 
     public Operation operation;
 
@@ -18,7 +18,7 @@ public class MathBlock : MonoBehaviour
             case Operation.Add:
                 textDisplay.text = "+";
                 break;
-            case Operation.Sub:
+            case Operation.Subtract:
                 textDisplay.text = "-";
                 break;
             case Operation.Multiply:

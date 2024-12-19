@@ -151,8 +151,8 @@ GameObject:
   - component: {fileID: 2930407483991742141}
   - component: {fileID: 3630965452016672914}
   m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
+  m_Name: MathBlock
+  m_TagString: MathBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
