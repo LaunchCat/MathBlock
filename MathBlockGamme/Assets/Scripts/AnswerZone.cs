@@ -9,18 +9,18 @@ public class AnswerZone : MonoBehaviour
     private void Start()
     {
         answerText.text = answer.ToString();
+        GridManager.gridManager.SnapToGrid(gameObject);
     }
 
-    private void OnCollisionEnter(Collision other)
+    public bool HandleMathBlockCollision(MathBlock other)
     {
-        if (other.gameObject.CompareTag("MathBlock"))
-        {
+        
             MathBlock mathBlock = other.gameObject.GetComponent<MathBlock>();
-            if (mathBlock.value == 0) return;
+            if (mathBlock.value == 0) return false;
             switch (mathBlock.operation)
             {
                 case MathBlock.Operation.None:
-                    return;
+                    return false;
                 case MathBlock.Operation.Add:
                     answer += mathBlock.value;
                     break;
@@ -35,17 +35,19 @@ public class AnswerZone : MonoBehaviour
                     {
                         break;
                     }
-                    answer /= mathBlock.value;  
-                    break;  
-                
+
+                    answer /= mathBlock.value;
+                    break;
             }
+
+
             UpdateAnswerText();
             Destroy(other.gameObject);
+            GridManager.gridManager.SnapToGrid(gameObject);
             if (answer.Equals(0))
-            {
                 Destroy(gameObject);
-            }
-        }
+
+            return true;
     }
 
     private void UpdateAnswerText()

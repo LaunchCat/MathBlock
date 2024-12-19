@@ -34,9 +34,10 @@ public class GridManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
 
-    private void Start()
+    private void OnValidate()
     {
         grid = new Node[width, height];
         for (int y = 0; y < height; y++)
@@ -46,6 +47,11 @@ public class GridManager : MonoBehaviour
                 grid[x, y] = new Node(new Vector3(x * gridSize +(0.5f*gridSize), 0, y * gridSize+(0.5f*gridSize)));
             }
         }
+    }
+
+    private void Start()
+    {
+        
     }
 
     public Node GetNode(Vector3 position)

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 
 public class MathBlock : MonoBehaviour
@@ -20,6 +21,12 @@ public class MathBlock : MonoBehaviour
 
     private bool HandleCollisionWithBlock(GameObject other)
     {
+        if (other.CompareTag("Answer"))
+        {
+            AnswerZone answerZone = other.GetComponent<AnswerZone>();
+            return answerZone.HandleMathBlockCollision(this);
+        }
+        
         if (other.CompareTag("MathBlock"))
         {
             MathBlock otherMathBlock = other.GetComponent<MathBlock>();
@@ -54,10 +61,46 @@ public class MathBlock : MonoBehaviour
                 }
                 Destroy(otherMathBlock.gameObject);
                 UpdateTextDisplay();
+                return true;
             }
+            if (otherMathBlock.operation == Operation.None)
+            {
+                if (value == 0)
+                {
+                    value = otherMathBlock.value;
+                }
+                else
+                {
+                    switch (operation)
+                    {
+                        case Operation.Add:
+                            otherMathBlock.value += value;
+                            value = otherMathBlock.value;
+                            break;
+                        case Operation.Subtract:
+                            otherMathBlock.value -= value;
+                            value = otherMathBlock.value;
+                            break;
+                        case Operation.Multiply:
+                            otherMathBlock.value *= value;
+                            value = otherMathBlock.value;
+                            break;
+                        case Operation.Divide:
+                            otherMathBlock.value /= value;
+                            value =(float)Math.Round(otherMathBlock.value, 1);
+                            break;
+                    }
+
+                    operation = Operation.None;
+                }
+                Destroy(otherMathBlock.gameObject);
+                UpdateTextDisplay();
+                return true;
+            }
+           
  
         }
-        return true;
+        return false;
     }
 
 
@@ -104,8 +147,8 @@ public class MathBlock : MonoBehaviour
             }
         }
         transform.position = desiredMove;
-        
-        GridManager.gridManager.SnapToGrid(gameObject);
+        if(gameObject)
+            GridManager.gridManager.SnapToGrid(gameObject);
         return true;
     }
 }
