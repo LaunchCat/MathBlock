@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 using Random = Unity.Mathematics.Random;
 
 
-public class MathBlock : MonoBehaviour
+public class MathBlock : TurnTakerBase
 {
     public enum Operation {None, Add, Subtract, Multiply, Divide };
 
@@ -17,7 +17,8 @@ public class MathBlock : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textDisplay;
     [SerializeField] private AudioSource pushSound;
     [SerializeField] private AudioSource CombineSound;
-
+    private Vector3 currentDir;
+    private bool bMoving = false;
     void OnValidate()
     {
         UpdateTextDisplay();
@@ -171,6 +172,12 @@ public class MathBlock : MonoBehaviour
         
     }
 
+    public void SuperPush(Vector3 direction)
+    {
+        currentDir = direction;
+        bMoving = true;
+    }
+
     public bool Push(Vector3 direction)
     {
         Vector3 desiredMove = transform.position + direction * GridManager.gridManager.gridSize;
@@ -189,6 +196,13 @@ public class MathBlock : MonoBehaviour
         transform.position = desiredMove;
         if(gameObject)
             GridManager.gridManager.SnapToGrid(gameObject);
+        return true;
+    }
+    
+    public override bool TakeTurn()
+    {
+        if (!bMoving) return true;
+        bMoving = Push(currentDir);
         return true;
     }
 }

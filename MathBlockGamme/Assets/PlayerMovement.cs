@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private AudioSource moveFailSFX;
     [SerializeField] private GameObject WinCanvas;
     [SerializeField] private GameObject LoseCanvas;
-
+    Vector3 playerDir;
     private bool flip = false;
     private void Start()
     {
@@ -26,8 +26,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (playerControls.WasPressedThisFrame()) 
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            Node n = GridManager.gridManager.GetNode(transform.position + playerDir * GridManager.gridManager.gridSize);
+            if (n.gameObj == null)
+            {
+                n.gameObj.GetComponent<MathBlock>().SuperPush(playerDir);
+                return;
+            }
+        }
+        if (playerControls.WasPressedThisFrame())
+        {
+            
             bMove = true;
+            
+        }
     }
 
     private void FixedUpdate()
@@ -66,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.flipX = flip;
             if (!GridManager.gridManager.GetNode(potentialMove).gameObj)
             {
+                playerDir = (potentialMove - transform.position).normalized;
                 transform.position = potentialMove;
                 GridManager.gridManager.SnapToGrid(gameObject);
                 PlayMoveSound();
@@ -80,6 +94,7 @@ public class PlayerMovement : MonoBehaviour
                         {
                             if (block.Push((block.transform.position - transform.position).normalized))
                             {
+                                playerDir = (potentialMove - transform.position).normalized;
                                 transform.position = potentialMove;
                                 GridManager.gridManager.SnapToGrid(gameObject);
                             }
@@ -91,15 +106,18 @@ public class PlayerMovement : MonoBehaviour
 
                         break;
                     case "Wall":
+                        playerDir = (potentialMove - transform.position).normalized;
                         PlayMoveFailSound();
                         break;
                     case "Pit":
+                        playerDir = (potentialMove - transform.position).normalized;
                         transform.position = potentialMove;
                         GridManager.gridManager.SnapToGrid(gameObject);
                         Destroy(gameObject, 1);
                         LoseCanvas.SetActive(true);
                         break;
                     case "Win":
+                        playerDir = (potentialMove - transform.position).normalized;
                         transform.position = potentialMove;
                         GridManager.gridManager.SnapToGrid(gameObject);
                         WinCanvas.SetActive(true);
@@ -108,10 +126,15 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-
-        bMove = false;
+        //LevelManager resets the bMove Var
+        LevelManager.instance.RunTurn();
+        
     }
 
+    public void GivePlayerTurn()
+    {
+        bMove = false;
+    }
     private void OnEnable()
     {
         playerControls.Enable();
