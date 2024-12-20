@@ -15,7 +15,9 @@ public class MathBlock : MonoBehaviour
     public float value;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private TextMeshProUGUI textDisplay;
-    private AudioSource pushSound;
+    [SerializeField] private AudioSource pushSound;
+    [SerializeField] private AudioSource CombineSound;
+
     void OnValidate()
     {
         UpdateTextDisplay();
@@ -24,7 +26,6 @@ public class MathBlock : MonoBehaviour
     private void Start()
     {
         GridManager.gridManager.SnapToGrid(gameObject);
-        pushSound = GetComponent<AudioSource>();
     }
 
     private bool HandleCollisionWithBlock(GameObject other)
@@ -75,7 +76,8 @@ public class MathBlock : MonoBehaviour
 
                            }
                        }
-
+                       CombineSound.pitch = UnityEngine.Random.Range(0.6f, 1.2f);
+                       CombineSound.Play();
                        Destroy(otherMathBlock.gameObject);
                        UpdateTextDisplay();
                        return true;
