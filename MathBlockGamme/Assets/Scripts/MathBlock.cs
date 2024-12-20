@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using Random = Unity.Mathematics.Random;
 
 
 public class MathBlock : MonoBehaviour
@@ -14,15 +15,16 @@ public class MathBlock : MonoBehaviour
     public float value;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private TextMeshProUGUI textDisplay;
+    private AudioSource pushSound;
     void OnValidate()
     {
         UpdateTextDisplay();
-        
     }
 
     private void Start()
     {
         GridManager.gridManager.SnapToGrid(gameObject);
+        pushSound = GetComponent<AudioSource>();
     }
 
     private bool HandleCollisionWithBlock(GameObject other)
@@ -180,6 +182,8 @@ public class MathBlock : MonoBehaviour
                     return false;
             }
         }
+        pushSound.pitch = UnityEngine.Random.Range(.7f, 1.0f);
+        pushSound.PlayOneShot(pushSound.clip,1);
         transform.position = desiredMove;
         if(gameObject)
             GridManager.gridManager.SnapToGrid(gameObject);
