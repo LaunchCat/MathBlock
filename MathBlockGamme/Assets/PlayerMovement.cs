@@ -1,12 +1,18 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
     public InputAction playerControls;
     private bool bMove = false;
 
+    
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+
+    private bool flip = false;
     private void Start()
     {
          GridManager.gridManager.SnapToGrid(gameObject);
@@ -29,9 +35,11 @@ public class PlayerMovement : MonoBehaviour
         {
             case > 0:
                 potentialMove += Vector3.right * GridManager.gridManager.gridSize;
+                flip = false;
                 break;
             case < 0:
                 potentialMove += Vector3.left * GridManager.gridManager.gridSize;
+                flip = true;
                 break;
         }
 
@@ -39,14 +47,17 @@ public class PlayerMovement : MonoBehaviour
         {
             case > 0:
                 potentialMove += Vector3.forward * GridManager.gridManager.gridSize;
+                flip = spriteRenderer.flipX;
                 break;
             case < 0:
                 potentialMove -= Vector3.forward * GridManager.gridManager.gridSize;
+                flip = spriteRenderer.flipX;
                 break;
         }
 
         if (GridManager.gridManager.GetNode(potentialMove) != null)
         {
+            spriteRenderer.flipX = flip;
             if (!GridManager.gridManager.GetNode(potentialMove).gameObj)
             {
                 transform.position = potentialMove;
