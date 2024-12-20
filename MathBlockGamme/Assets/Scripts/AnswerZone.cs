@@ -6,7 +6,7 @@ public class AnswerZone : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI answerText;
     [SerializeField] private float answer;
-
+    [SerializeField] private AudioSource OpenSFX;
     private void Start()
     {
         GridManager.gridManager.SnapToGrid(gameObject);
@@ -55,7 +55,12 @@ public class AnswerZone : MonoBehaviour
             Destroy(other.gameObject);
             GridManager.gridManager.SnapToGrid(gameObject);
             if (answer.Equals(0))
-                Destroy(gameObject);
+            {
+                OpenSFX.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+                OpenSFX.PlayOneShot(OpenSFX.clip);
+                //Destroy(gameObject);
+                transform.position = new Vector3(-1000, -1000f, 1000);
+            }
 
             return true;
     }
