@@ -10684,6 +10684,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7579823875378384992, guid: 60b721fa382193644940c34b8b90b77f, type: 3}
+      propertyPath: WinCanvas
+      value: 
+      objectReference: {fileID: 1611361711}
+    - target: {fileID: 7579823875378384992, guid: 60b721fa382193644940c34b8b90b77f, type: 3}
+      propertyPath: LoseCanvas
+      value: 
+      objectReference: {fileID: 746724529}
+    - target: {fileID: 7579823875378384992, guid: 60b721fa382193644940c34b8b90b77f, type: 3}
       propertyPath: forwardSpeed
       value: 5
       objectReference: {fileID: 0}
@@ -10767,7 +10775,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4ac62e13ec9f6438e964881041dbc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WinCanvas: {fileID: 1611361711}
 --- !u!23 &6861368146563522811
 MeshRenderer:
   m_ObjectHideFlags: 0

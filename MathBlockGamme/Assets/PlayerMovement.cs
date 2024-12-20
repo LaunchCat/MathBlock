@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Random = Unity.Mathematics.Random;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class PlayerMovement : MonoBehaviour
     
     [SerializeField]
     private SpriteRenderer spriteRenderer;
+
+    [SerializeField] private AudioSource moveSFX;
+    [SerializeField] private AudioSource moveFailSFX;
+    [SerializeField] private GameObject WinCanvas;
+    [SerializeField] private GameObject LoseCanvas;
 
     private bool flip = false;
     private void Start()
@@ -62,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 transform.position = potentialMove;
                 GridManager.gridManager.SnapToGrid(gameObject);
+                PlayMoveSound();
             }
             else
             {
@@ -76,20 +83,26 @@ public class PlayerMovement : MonoBehaviour
                                 transform.position = potentialMove;
                                 GridManager.gridManager.SnapToGrid(gameObject);
                             }
+                            else
+                            {
+                                PlayMoveFailSound();
+                            }
                         }
 
                         break;
                     case "Wall":
+                        PlayMoveFailSound();
                         break;
                     case "Pit":
                         transform.position = potentialMove;
                         GridManager.gridManager.SnapToGrid(gameObject);
                         Destroy(gameObject, 1);
+                        LoseCanvas.SetActive(true);
                         break;
                     case "Win":
                         transform.position = potentialMove;
                         GridManager.gridManager.SnapToGrid(gameObject);
-                        Debug.Log("You Win!");
+                        WinCanvas.SetActive(true);
                         break;
                     
                 }
@@ -107,6 +120,18 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
         playerControls.Disable();
+    }
+
+    private void PlayMoveSound()
+    {
+        moveSFX.pitch = UnityEngine.Random.Range(0.6f, 1.0f);
+        moveSFX.PlayOneShot(moveSFX.clip);
+    }
+
+    private void PlayMoveFailSound()
+    {
+        moveFailSFX.pitch = UnityEngine.Random.Range(0.6f, 1.4f);
+        moveFailSFX.PlayOneShot(moveFailSFX.clip);
     }
     
 }
