@@ -6,6 +6,9 @@ TagManager:
   tags:
   - MathBlock
   - Answer
+  - Pit
+  - Wall
+  - Win
   layers:
   - Default
   - TransparentFX

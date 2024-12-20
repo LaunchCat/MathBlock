@@ -18,12 +18,18 @@ public class Node
         gameObj = obj;
     }
 }
+
 public class GridManager : MonoBehaviour
 {
     public static GridManager gridManager;
-    public const int gridSize = 1;
-    private const int height = 100;
-    private const int width = 100;
+    [SerializeField]
+    public int gridSize = 1;
+    [SerializeField]
+    private int height = 100;
+    [SerializeField]
+    private int width = 100;
+
+    [SerializeField] private bool showDebugGrid = false;
     private Node[,] grid;
 
     private void Awake()
@@ -68,6 +74,7 @@ public class GridManager : MonoBehaviour
     
     private void OnDrawGizmos()
     {
+        if (!showDebugGrid) return;
         if (grid == null) return;
         for (int y = 0; y < height; y++)
         {
@@ -92,4 +99,5 @@ public class GridManager : MonoBehaviour
         go.transform.position = GetNode(go.transform.position).position;
         GetNode(go.transform.position).SetObj(go);
     }
+
 }

@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 using TMPro;
 public class AnswerZone : MonoBehaviour
@@ -8,7 +9,16 @@ public class AnswerZone : MonoBehaviour
 
     private void Start()
     {
+        GridManager.gridManager.SnapToGrid(gameObject);
+    }
+
+    private void OnValidate()
+    {
         answerText.text = answer.ToString();
+    }
+
+    private void Update()
+    {
         GridManager.gridManager.SnapToGrid(gameObject);
     }
 

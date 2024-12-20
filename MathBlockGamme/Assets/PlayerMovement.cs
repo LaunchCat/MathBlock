@@ -28,20 +28,20 @@ public class PlayerMovement : MonoBehaviour
         switch (input.x)
         {
             case > 0:
-                potentialMove += Vector3.right * GridManager.gridSize;
+                potentialMove += Vector3.right * GridManager.gridManager.gridSize;
                 break;
             case < 0:
-                potentialMove += Vector3.left * GridManager.gridSize;
+                potentialMove += Vector3.left * GridManager.gridManager.gridSize;
                 break;
         }
 
         switch (input.y)
         {
             case > 0:
-                potentialMove += Vector3.forward * GridManager.gridSize;
+                potentialMove += Vector3.forward * GridManager.gridManager.gridSize;
                 break;
             case < 0:
-                potentialMove -= Vector3.forward * GridManager.gridSize;
+                potentialMove -= Vector3.forward * GridManager.gridManager.gridSize;
                 break;
         }
 
@@ -54,14 +54,33 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                var block = GridManager.gridManager.GetNode(potentialMove).gameObj.GetComponent<MathBlock>();
-                if (block != null)
+                switch (GridManager.gridManager.GetNode(potentialMove).gameObj.tag)
                 {
-                    if (block.Push((block.transform.position - transform.position).normalized))
-                    {
+                    case "MathBlock" :
+                        var block = GridManager.gridManager.GetNode(potentialMove).gameObj.GetComponent<MathBlock>();
+                        if (block != null)
+                        {
+                            if (block.Push((block.transform.position - transform.position).normalized))
+                            {
+                                transform.position = potentialMove;
+                                GridManager.gridManager.SnapToGrid(gameObject);
+                            }
+                        }
+
+                        break;
+                    case "Wall":
+                        break;
+                    case "Pit":
                         transform.position = potentialMove;
                         GridManager.gridManager.SnapToGrid(gameObject);
-                    }
+                        Destroy(gameObject, 1);
+                        break;
+                    case "Win":
+                        transform.position = potentialMove;
+                        GridManager.gridManager.SnapToGrid(gameObject);
+                        Debug.Log("You Win!");
+                        break;
+                    
                 }
             }
         }
