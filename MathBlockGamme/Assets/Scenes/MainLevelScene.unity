@@ -4887,7 +4887,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7526730015799853585, guid: bd3760d458ff7a64d818595e9b2d67a6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 19.39
+      value: 11.52
       objectReference: {fileID: 0}
     - target: {fileID: 7526730015799853585, guid: bd3760d458ff7a64d818595e9b2d67a6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9886,7 +9886,7 @@ MonoBehaviour:
   gridSize: 1
   height: 32
   width: 34
-  showDebugGrid: 1
+  showDebugGrid: 0
 --- !u!4 &1898056174
 Transform:
   m_ObjectHideFlags: 0
@@ -11093,7 +11093,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1228606871376285329, guid: 60b721fa382193644940c34b8b90b77f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.58
+      value: 2.52
       objectReference: {fileID: 0}
     - target: {fileID: 1228606871376285329, guid: 60b721fa382193644940c34b8b90b77f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11101,7 +11101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1228606871376285329, guid: 60b721fa382193644940c34b8b90b77f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 19.9
+      value: 1.44
       objectReference: {fileID: 0}
     - target: {fileID: 1228606871376285329, guid: 60b721fa382193644940c34b8b90b77f, type: 3}
       propertyPath: m_LocalRotation.w
