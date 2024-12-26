@@ -96,7 +96,9 @@ public class GridManager : MonoBehaviour
 
     public void SnapToGrid(GameObject go)
     {
-        go.transform.position = GetNode(go.transform.position).position;
+        Node n = GetNode(go.transform.position);
+        if (n == null) return;
+        go.transform.position = n.position;
         GetNode(go.transform.position).SetObj(go);
     }
 

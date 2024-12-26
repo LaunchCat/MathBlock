@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
@@ -19,6 +20,7 @@ public class MathBlock : TurnTakerBase
     [SerializeField] private AudioSource CombineSound;
     private Vector3 currentDir;
     private bool bMoving = false;
+    Vector3 originalScale;
     void OnValidate()
     {
         UpdateTextDisplay();
@@ -27,6 +29,7 @@ public class MathBlock : TurnTakerBase
     private void Start()
     {
         GridManager.gridManager.SnapToGrid(gameObject);
+        originalScale = transform.localScale;
     }
 
     private bool HandleCollisionWithBlock(GameObject other)
@@ -79,6 +82,7 @@ public class MathBlock : TurnTakerBase
                        }
                        CombineSound.pitch = UnityEngine.Random.Range(0.6f, 1.2f);
                        CombineSound.Play();
+                       StartCoroutine(GrowShrinkVFX());
                        Destroy(otherMathBlock.gameObject);
                        UpdateTextDisplay();
                        return true;
@@ -126,6 +130,7 @@ public class MathBlock : TurnTakerBase
                        }
 
                        Destroy(otherMathBlock.gameObject);
+                       StartCoroutine(GrowShrinkVFX());
                        UpdateTextDisplay();
                        return true;
                    }
@@ -134,7 +139,8 @@ public class MathBlock : TurnTakerBase
 
            case "Pit":
            {
-               Destroy(gameObject, 1);
+               //Destroy(gameObject, 1);
+               StartCoroutine(GrowShrinkDestroyVFX());
                return true;
            }
         }
@@ -205,4 +211,44 @@ public class MathBlock : TurnTakerBase
         bMoving = Push(currentDir);
         return true;
     }
+    
+    private IEnumerator GrowShrinkVFX()
+    {
+        Vector3 desiredScale = new Vector3(1.5f, 1.5f, 1.5f);
+        float lerpSpeed = 18f;
+        while (transform.localScale.x < desiredScale.x - 0.1f)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, desiredScale, Time.deltaTime * lerpSpeed);
+            yield return new WaitForEndOfFrame();
+        }
+        while (transform.localScale.x >= originalScale.x)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, Time.deltaTime * lerpSpeed);
+            yield return new WaitForEndOfFrame();
+        }
+        transform.localScale = originalScale;
+        yield return null;
+    }
+    
+    private IEnumerator GrowShrinkDestroyVFX()
+    {
+        Vector3 desiredScale = new Vector3(1.5f, 1.5f, 1.5f);
+        float lerpSpeed = 9f;
+        while (transform.localScale.x < desiredScale.x - 0.1f)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, desiredScale, Time.deltaTime * lerpSpeed);
+            yield return new WaitForEndOfFrame();
+        }
+        while (transform.localScale.x >= 0)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(-1,-1,-1), Time.deltaTime * lerpSpeed);
+            yield return new WaitForEndOfFrame();
+        }
+
+        GridManager.gridManager.GetNode(transform.position).SetObj(null);
+        transform.position = new Vector3(-1000, -1000f, 1000);
+        yield return null;
+    }
 }
+
+
