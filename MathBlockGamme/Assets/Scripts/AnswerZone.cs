@@ -61,6 +61,7 @@ public class AnswerZone : MonoBehaviour
 
             UpdateAnswerText();
             Destroy(other.gameObject);
+            LevelManager.instance.RemoveTurnTaker(other.gameObject.GetComponent<MathBlock>());
             GridManager.gridManager.SnapToGrid(gameObject);
             if (answer.Equals(0))
             {

@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
+    
     private List<TurnTakerBase> turnTakers;
     [SerializeField] private PlayerMovement player;
     
@@ -23,6 +24,11 @@ public class LevelManager : MonoBehaviour
         turnTakers = new List<TurnTakerBase>(FindObjectsByType<TurnTakerBase>(FindObjectsSortMode.None));
     }
 
+    public void RemoveTurnTaker(TurnTakerBase turnTaker)
+    {
+        turnTakers.Remove(turnTaker);
+    }
+    
     public void RunTurn()
     {
         for (int i = 0; i < turnTakers.Count; i++)

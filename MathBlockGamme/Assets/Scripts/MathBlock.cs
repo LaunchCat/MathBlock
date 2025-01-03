@@ -232,6 +232,7 @@ public class MathBlock : TurnTakerBase
     
     private IEnumerator GrowShrinkDestroyVFX()
     {
+        LevelManager.instance.RemoveTurnTaker(this);
         Vector3 desiredScale = new Vector3(1.5f, 1.5f, 1.5f);
         float lerpSpeed = 9f;
         while (transform.localScale.x < desiredScale.x - 0.1f)

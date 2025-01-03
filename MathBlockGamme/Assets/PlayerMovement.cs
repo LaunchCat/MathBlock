@@ -29,17 +29,18 @@ public class PlayerMovement : MonoBehaviour
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Node n = GridManager.gridManager.GetNode(transform.position + playerDir * GridManager.gridManager.gridSize);
-            if (n.gameObj == null)
+            if (n.gameObj is not null)
             {
-                n.gameObj.GetComponent<MathBlock>().SuperPush(playerDir);
+                Debug.Log("HEADBUTT");
+                MathBlock block = n.gameObj.GetComponent<MathBlock>();
+                block?.SuperPush(playerDir);
+                LevelManager.instance.RunTurn();
                 return;
             }
         }
         if (playerControls.WasPressedThisFrame())
         {
-            
             bMove = true;
-            
         }
     }
 
