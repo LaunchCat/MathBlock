@@ -104,12 +104,11 @@ public class AnswerZone : MonoBehaviour
             transform.localScale = Vector3.Lerp(transform.localScale, desiredScale, Time.deltaTime * lerpSpeed);
             yield return new WaitForEndOfFrame();
         }
-        while (transform.localScale.x >= 0)
+        while (transform.localScale.x >= 0.1f)
         {
-            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(-1,-1,-1), Time.deltaTime * lerpSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, Time.deltaTime * lerpSpeed);
             yield return new WaitForEndOfFrame();
         }
-
         GridManager.gridManager.GetNode(transform.position).SetObj(null);
         transform.position = new Vector3(-1000, -1000f, 1000);
         yield return null;
