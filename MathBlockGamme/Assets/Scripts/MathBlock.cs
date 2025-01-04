@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 using Random = Unity.Mathematics.Random;
 
 
@@ -18,6 +19,8 @@ public class MathBlock : TurnTakerBase
     [SerializeField] private TextMeshProUGUI textDisplay;
     [SerializeField] private AudioSource pushSound;
     [SerializeField] private AudioSource CombineSound;
+    [SerializeField] private Image directionalImage;
+    
     private Vector3 currentDir;
     private bool bMoving = false;
     Vector3 originalScale;
@@ -83,6 +86,7 @@ public class MathBlock : TurnTakerBase
                        CombineSound.pitch = UnityEngine.Random.Range(0.6f, 1.2f);
                        CombineSound.Play();
                        StartCoroutine(GrowShrinkVFX());
+                       LevelManager.instance.RemoveTurnTaker(otherMathBlock);
                        Destroy(otherMathBlock.gameObject);
                        UpdateTextDisplay();
                        return true;
@@ -208,7 +212,22 @@ public class MathBlock : TurnTakerBase
     
     public override bool TakeTurn()
     {
-        if (!bMoving) return true;
+        if (!bMoving)
+        {
+            directionalImage.enabled = false;
+            return true;
+        }
+        
+        directionalImage.enabled = true;
+        if(currentDir == Vector3.forward)
+          directionalImage.gameObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+        if(currentDir == Vector3.left)
+            directionalImage.gameObject.transform.rotation = Quaternion.Euler(90, 0, 90);
+        if(currentDir == Vector3.back)
+            directionalImage.gameObject.transform.rotation = Quaternion.Euler(90, 0, 180);
+        if(currentDir == Vector3.right)
+          directionalImage.gameObject.transform.rotation = Quaternion.Euler(90, 0, 270);
+
         bMoving = Push(currentDir);
         return true;
     }
