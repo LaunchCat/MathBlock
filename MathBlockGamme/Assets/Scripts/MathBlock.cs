@@ -197,6 +197,7 @@ public class MathBlock : TurnTakerBase
                     return false;
             }
         }
+        GridManager.gridManager.GetNode(transform.position).SetObj(null);
         pushSound.pitch = UnityEngine.Random.Range(.7f, 1.0f);
         pushSound.PlayOneShot(pushSound.clip,1);
         transform.position = desiredMove;
