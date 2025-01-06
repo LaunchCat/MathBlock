@@ -23,6 +23,7 @@ public class MathBlock : TurnTakerBase
     
     private Vector3 currentDir;
     private bool bMoving = false;
+    private bool bCancelMoving = false;
     Vector3 originalScale;
     void OnValidate()
     {
@@ -48,107 +49,120 @@ public class MathBlock : TurnTakerBase
 
             case "MathBlock":
             {
-                   MathBlock otherMathBlock = other.GetComponent<MathBlock>();
-                   if ((otherMathBlock.operation == Operation.None && this.operation == Operation.None) ||
-                       (otherMathBlock.operation != Operation.None && this.operation != Operation.None)) return false;
+                MathBlock otherMathBlock = other.GetComponent<MathBlock>();
+                if ((otherMathBlock.operation == Operation.None && this.operation == Operation.None) ||
+                    (otherMathBlock.operation != Operation.None && this.operation != Operation.None)) return false;
 
-                   if (operation == Operation.None)
-                   {
-                       if (otherMathBlock.value == 0)
-                       {
-                           operation = otherMathBlock.operation;
-                       }
-                       else
-                       {
-                           switch (otherMathBlock.operation)
-                           {
-                               case Operation.Add:
-                                   value += otherMathBlock.value;
-                                   break;
-                               case Operation.Subtract:
-                                   value -= otherMathBlock.value;
-                                   if (value <= 0)
-                                   {
-                                       operation = Operation.Subtract;
-                                       value = Mathf.Abs(value);
-                                   }
-                                   break;
-                               case Operation.Multiply:
-                                   value *= otherMathBlock.value;
-                                   break;
-                               case Operation.Divide:
-                                   value /= otherMathBlock.value;
-                                   value = (float)Math.Round(value, 1);
-                                   break;
+                if (operation == Operation.None)
+                {
+                    if (otherMathBlock.value == 0)
+                    {
+                        operation = otherMathBlock.operation;
+                    }
+                    else
+                    {
+                        switch (otherMathBlock.operation)
+                        {
+                            case Operation.Add:
+                                value += otherMathBlock.value;
+                                break;
+                            case Operation.Subtract:
+                                value -= otherMathBlock.value;
+                                if (value <= 0)
+                                {
+                                    operation = Operation.Subtract;
+                                    value = Mathf.Abs(value);
+                                }
 
-                           }
-                       }
-                       CombineSound.pitch = UnityEngine.Random.Range(0.6f, 1.2f);
-                       CombineSound.Play();
-                       StartCoroutine(GrowShrinkVFX());
-                       LevelManager.instance.RemoveTurnTaker(otherMathBlock);
-                       Destroy(otherMathBlock.gameObject);
-                       UpdateTextDisplay();
-                       return true;
-                   }
+                                break;
+                            case Operation.Multiply:
+                                value *= otherMathBlock.value;
+                                break;
+                            case Operation.Divide:
+                                value /= otherMathBlock.value;
+                                value = (float)Math.Round(value, 1);
+                                break;
 
-                   if (otherMathBlock.operation == Operation.None)
-                   {
-                       if (value == 0)
-                       {
-                           value = otherMathBlock.value;
-                       }
-                       else
-                       {
-                           switch (operation)
-                           {
-                               case Operation.Add:
-                                   otherMathBlock.value += value;
-                                   value = otherMathBlock.value;
-                                   operation = Operation.None;
-                                   break;
-                               case Operation.Subtract:
-                                   otherMathBlock.value -= value;
-                                   value = otherMathBlock.value;
-                                   if (value <= 0)
-                                   {
-                                       operation = Operation.Subtract;
-                                       value = Mathf.Abs(value);
-                                       break;
-                                   }
-                                   operation = Operation.None;
-                                   break;
-                               case Operation.Multiply:
-                                   otherMathBlock.value *= value;
-                                   value = otherMathBlock.value;
-                                   operation = Operation.None;
-                                   break;
-                               case Operation.Divide:
-                                   otherMathBlock.value /= value;
-                                   value = (float)Math.Round(otherMathBlock.value, 1);
-                                   operation = Operation.None;
-                                   break;
-                           }
+                        }
+                    }
 
-                           
-                       }
+                    CombineSound.pitch = UnityEngine.Random.Range(0.6f, 1.2f);
+                    CombineSound.Play();
+                    StartCoroutine(GrowShrinkVFX());
+                    LevelManager.instance.RemoveTurnTaker(otherMathBlock);
+                    Destroy(otherMathBlock.gameObject);
+                    UpdateTextDisplay();
+                    bCancelMoving = true;
+                    return true;
+                }
 
-                       Destroy(otherMathBlock.gameObject);
-                       StartCoroutine(GrowShrinkVFX());
-                       UpdateTextDisplay();
-                       return true;
-                   }
-                   break;
+                if (otherMathBlock.operation == Operation.None)
+                {
+                    if (value == 0)
+                    {
+                        value = otherMathBlock.value;
+                    }
+                    else
+                    {
+                        switch (operation)
+                        {
+                            case Operation.Add:
+                                otherMathBlock.value += value;
+                                value = otherMathBlock.value;
+                                operation = Operation.None;
+                                break;
+                            case Operation.Subtract:
+                                otherMathBlock.value -= value;
+                                value = otherMathBlock.value;
+                                if (value <= 0)
+                                {
+                                    operation = Operation.Subtract;
+                                    value = Mathf.Abs(value);
+                                    break;
+                                }
+
+                                operation = Operation.None;
+                                break;
+                            case Operation.Multiply:
+                                otherMathBlock.value *= value;
+                                value = otherMathBlock.value;
+                                operation = Operation.None;
+                                break;
+                            case Operation.Divide:
+                                otherMathBlock.value /= value;
+                                value = (float)Math.Round(otherMathBlock.value, 1);
+                                operation = Operation.None;
+                                break;
+                        }
+
+
+                    }
+
+                    bCancelMoving = true;
+                    Destroy(otherMathBlock.gameObject);
+                    StartCoroutine(GrowShrinkVFX());
+                    UpdateTextDisplay();
+                    return true;
+                }
+
+                break;
             }
 
-           case "Pit":
-           {
-               //Destroy(gameObject, 1);
-               StartCoroutine(GrowShrinkDestroyVFX());
-               return true;
-           }
-        }
+            case "Pit":
+            {
+                //Destroy(gameObject, 1);
+                StartCoroutine(GrowShrinkDestroyVFX());
+                return true;
+            }
 
+            case "Wall":
+            {
+                bCancelMoving = true;
+                return false;
+            }
+        
+    }
+        bCancelMoving = true;
         return false;
     }
 
@@ -191,16 +205,28 @@ public class MathBlock : TurnTakerBase
     public bool Push(Vector3 direction)
     {
         Vector3 desiredMove = transform.position + direction * GridManager.gridManager.gridSize;
-        if(GridManager.gridManager.GetNode(desiredMove) == null)
+        if (GridManager.gridManager.GetNode(desiredMove) == null)
+        {
             return false;
+        }
+
         if (GridManager.gridManager.GetNode(desiredMove).gameObj)
         {
             if (HandleCollisionWithBlock(GridManager.gridManager.GetNode(desiredMove).gameObj) == false)
             {
-                if(GridManager.gridManager.GetNode(desiredMove).gameObj.GetComponent<MathBlock>().Push(direction) == false)
+                if(GridManager.gridManager.GetNode(desiredMove).gameObj.tag == "MathBlock")
+                    if(GridManager.gridManager.GetNode(desiredMove).gameObj.GetComponent<MathBlock>().Push(direction) == false)
+                        return false;
+                if (GridManager.gridManager.GetNode(desiredMove).gameObj.tag == "Wall")
+                {
                     return false;
+                }
             }
+            
+            Debug.Log("Collided with: " + GridManager.gridManager.GetNode(desiredMove).gameObj);
+
         }
+       
         GridManager.gridManager.GetNode(transform.position).SetObj(null);
         pushSound.pitch = UnityEngine.Random.Range(.7f, 1.0f);
         pushSound.PlayOneShot(pushSound.clip,1);
@@ -212,12 +238,19 @@ public class MathBlock : TurnTakerBase
     
     public override bool TakeTurn()
     {
+        if (bCancelMoving)
+        {
+            bMoving = false;
+            bCancelMoving = false;
+        }
+
         if (!bMoving)
         {
+            
             directionalImage.enabled = false;
             return true;
         }
-        
+        Debug.Log("Moving Turn ");
         directionalImage.enabled = true;
         if(currentDir == Vector3.forward)
           directionalImage.gameObject.transform.rotation = Quaternion.Euler(90, 0, 0);
