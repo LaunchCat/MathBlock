@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private AudioSource moveSFX;
     [SerializeField] private AudioSource moveFailSFX;
+    [SerializeField] private AudioSource headbuttSFX;
     [SerializeField] private GameObject WinCanvas;
     [SerializeField] private GameObject LoseCanvas;
     Vector3 playerDir;
@@ -31,7 +32,8 @@ public class PlayerMovement : MonoBehaviour
             Node n = GridManager.gridManager.GetNode(transform.position + playerDir * GridManager.gridManager.gridSize);
             if (n.gameObj is not null)
             {
-                Debug.Log("HEADBUTT");
+                headbuttSFX.pitch = UnityEngine.Random.Range(0.6f, 1.0f);
+                headbuttSFX.PlayOneShot(headbuttSFX.clip);
                 MathBlock block = n.gameObj.GetComponent<MathBlock>();
                 block?.SuperPush(playerDir);
                 LevelManager.instance.RunTurn();
