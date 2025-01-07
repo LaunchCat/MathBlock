@@ -5,6 +5,6 @@ public class ResetLevel : MonoBehaviour
 {
     public void Activate()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+       LevelManager.instance.ResetLevel();
     }
 }

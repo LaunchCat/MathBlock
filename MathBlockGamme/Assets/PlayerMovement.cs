@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -109,7 +110,20 @@ public class PlayerMovement : MonoBehaviour
 
                         break;
                     case "Projectile":
+                        
                         playerDir = (potentialMove - transform.position).normalized;
+                        Vector3 right = GridManager.gridManager.GetNode(potentialMove).gameObj.transform.right;
+                        
+                        float dot = Vector3.Dot(right, playerDir);
+                        Debug.Log("DOT: " + dot);
+                        if (dot < -0.1)
+                        {
+                            transform.position = potentialMove;
+                            GridManager.gridManager.SnapToGrid(gameObject);
+                            LevelManager.instance.ResetLevel();
+                            return;
+                        }
+                        
                         transform.position = potentialMove;
                         GridManager.gridManager.SnapToGrid(gameObject);
                         break;

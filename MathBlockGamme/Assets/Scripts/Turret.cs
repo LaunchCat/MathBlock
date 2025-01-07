@@ -27,11 +27,13 @@ public class Turret : TurnTakerBase
     public void FireTurret()
     {
         Projectile spawnedProj = Instantiate(projectilePrefab, spawnNode.position, transform.rotation);
+        if (spawnNode.gameObj != null && spawnNode.gameObj.CompareTag("Player"))
+        {
+            LevelManager.instance.ResetLevel();
+        }
+  
         GridManager.gridManager.SnapToGrid(spawnedProj.gameObject);
         LevelManager.instance.QueueAddTurnTaker(spawnedProj);
-        
-        
-
     }
 
     public override bool TakeTurn()

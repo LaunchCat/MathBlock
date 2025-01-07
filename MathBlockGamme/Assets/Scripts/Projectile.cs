@@ -24,7 +24,8 @@ public class Projectile : TurnTakerBase
         if (desiredNode == null)
         {
             LevelManager.instance.QueueRemoveTurnTaker(this);
-            GridManager.gridManager.GetNode(transform.position).SetObj(null);
+            if(GridManager.gridManager.GetNode(transform.position).gameObj == this.gameObject)
+                GridManager.gridManager.GetNode(transform.position).SetObj(null);
             Debug.Log("Node was NULL");
             Destroy(gameObject);
             return true;
@@ -32,7 +33,8 @@ public class Projectile : TurnTakerBase
 
         if (desiredNode.gameObj == null)
         {
-            GridManager.gridManager.GetNode(transform.position).SetObj(null);
+            if(GridManager.gridManager.GetNode(transform.position).gameObj == this.gameObject)
+                GridManager.gridManager.GetNode(transform.position).SetObj(null);
             transform.position = desiredMove;
             GridManager.gridManager.SnapToGrid(gameObject);
             return true;
@@ -41,30 +43,40 @@ public class Projectile : TurnTakerBase
         switch (desiredNode.gameObj.tag)
         {
             case "Player":
-                
+                if(GridManager.gridManager.GetNode(transform.position).gameObj == this.gameObject)
+                    GridManager.gridManager.GetNode(transform.position).SetObj(null);
+                transform.position = desiredMove;
+                GridManager.gridManager.SnapToGrid(gameObject);
+                LevelManager.instance.ResetLevel();
                 break;
             case "Wall":
                
-                GridManager.gridManager.GetNode(transform.position).SetObj(null);
+                if(GridManager.gridManager.GetNode(transform.position).gameObj == this.gameObject)
+                    GridManager.gridManager.GetNode(transform.position).SetObj(null);
                 LevelManager.instance.QueueRemoveTurnTaker(this);
                 Destroy(gameObject);
                 break;
             case "Answer":
                
-                GridManager.gridManager.GetNode(transform.position).SetObj(null);
+                if(GridManager.gridManager.GetNode(transform.position).gameObj == this.gameObject)
+                    GridManager.gridManager.GetNode(transform.position).SetObj(null);
                 LevelManager.instance.QueueRemoveTurnTaker(this);
                 Destroy(gameObject);
                 break;
             case "MathBlock":
                
-                GridManager.gridManager.GetNode(transform.position).SetObj(null);
+                
+                if(GridManager.gridManager.GetNode(transform.position).gameObj == this.gameObject)
+                    GridManager.gridManager.GetNode(transform.position).SetObj(null);
                 LevelManager.instance.QueueRemoveTurnTaker(this);
                 LevelManager.instance.QueueRemoveTurnTaker(desiredNode.gameObj.GetComponent<MathBlock>());
                 Destroy(gameObject);
                 Destroy(desiredNode.gameObj);
                 break;
             case "Projectile":
-                GridManager.gridManager.GetNode(transform.position).SetObj(null);
+                
+                if(GridManager.gridManager.GetNode(transform.position).gameObj == this.gameObject)
+                    GridManager.gridManager.GetNode(transform.position).SetObj(null);
                 transform.position = desiredMove;
                 GridManager.gridManager.SnapToGrid(gameObject);
                 break;
