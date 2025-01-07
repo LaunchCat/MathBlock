@@ -108,6 +108,11 @@ public class PlayerMovement : MonoBehaviour
                         }
 
                         break;
+                    case "Projectile":
+                        playerDir = (potentialMove - transform.position).normalized;
+                        transform.position = potentialMove;
+                        GridManager.gridManager.SnapToGrid(gameObject);
+                        break;
                     case "Wall":
                         playerDir = (potentialMove - transform.position).normalized;
                         PlayMoveFailSound();
@@ -130,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         //LevelManager resets the bMove Var
+        GameManager.Get().IncrementTurnsTaken();
         LevelManager.instance.RunTurn();
         
     }

@@ -89,7 +89,7 @@ public class MathBlock : TurnTakerBase
                     CombineSound.pitch = UnityEngine.Random.Range(0.6f, 1.2f);
                     CombineSound.Play();
                     StartCoroutine(GrowShrinkVFX());
-                    LevelManager.instance.RemoveTurnTaker(otherMathBlock);
+                    LevelManager.instance.QueueRemoveTurnTaker(otherMathBlock);
                     Destroy(otherMathBlock.gameObject);
                     UpdateTextDisplay();
                     bCancelMoving = true;
@@ -139,6 +139,7 @@ public class MathBlock : TurnTakerBase
                     }
 
                     bCancelMoving = true;
+                    LevelManager.instance.QueueRemoveTurnTaker(otherMathBlock);
                     Destroy(otherMathBlock.gameObject);
                     StartCoroutine(GrowShrinkVFX());
                     UpdateTextDisplay();
@@ -246,7 +247,7 @@ public class MathBlock : TurnTakerBase
 
         if (!bMoving)
         {
-            
+
             directionalImage.enabled = false;
             return true;
         }
@@ -285,7 +286,7 @@ public class MathBlock : TurnTakerBase
     
     private IEnumerator GrowShrinkDestroyVFX()
     {
-        LevelManager.instance.RemoveTurnTaker(this);
+        LevelManager.instance.QueueRemoveTurnTaker(this);
         Vector3 desiredScale = new Vector3(1.5f, 1.5f, 1.5f);
         float lerpSpeed = 9f;
         while (transform.localScale.x < desiredScale.x - 0.1f)

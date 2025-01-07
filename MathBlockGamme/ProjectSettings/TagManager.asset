@@ -9,6 +9,7 @@ TagManager:
   - Pit
   - Wall
   - Win
+  - Projectile
   layers:
   - Default
   - TransparentFX
